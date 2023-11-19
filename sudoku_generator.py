@@ -29,7 +29,7 @@ class SudokuGenerator:
                     ['0' for i in range(row_length)]
                     for j in range(row_length)
         ]
-        self.box_length = math.sqrt(self.row_length)
+        self.box_length = int(math.sqrt(self.row_length))
 
 
     def get_board(self):
