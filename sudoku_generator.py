@@ -30,7 +30,7 @@ class SudokuGenerator:
 
 
     def get_board(self):
-
+	return self.board
 
     '''
 	Displays the board to the console
