@@ -40,7 +40,7 @@ class SudokuGenerator:
 	Return: None
     '''
     def print_board(self):
-        pass
+        return print(get_board)
 
     '''
 	Determines if num is contained in the specified row (horizontal) of the board
