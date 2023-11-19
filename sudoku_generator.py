@@ -123,11 +123,11 @@ class SudokuGenerator:
     '''
     def fill_box(self, row_start, col_start):
         board = self.board
-        for i in range(row_start, row_start + 3):
-            for b in range(col_start, col_start + 3):
+        for i in range(row_start, row_start + box_length):
+            for b in range(col_start, col_start + box_length):
                 while True:
                     digit = random.randint(1, 9)
-                    if digit not in board and self.valid_in_box(row_start, col_start, digit):
+                    if self.valid_in_box(row_start, col_start, digit):
                         self.board[i][b] = digit
                         board += digit
         
