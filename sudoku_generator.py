@@ -15,7 +15,7 @@ class SudokuGenerator:
             for int in row:
                 print(int, ' ')
             print()
-        return None
+        
 
     def valid_in_row(self, row, num):
         for i in range(self.row_length):
