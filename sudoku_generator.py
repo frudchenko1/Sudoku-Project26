@@ -44,13 +44,12 @@ class SudokuGenerator:
             return False
 
     def fill_box(self, row_start, col_start):
-        for i in range(row_start, row_start + self.box_length):
-            for b in range(col_start, col_start + self.box_length):
-                while True:
-                    digit = random.randint(1, 9)
-                    if self.valid_in_box(row_start, col_start, digit):
-                        self.board[i][b] = digit
-                        break
+        num = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        for row in range(row_start, row_start + 3):
+            for col in range(col_start, col_start + 3):
+                index = random.randrange(len(num))
+                self.board[row][col] = num[index]
+                num.pop(index)
 
     def fill_diagonal(self):
         self.fill_box(0, 0)
