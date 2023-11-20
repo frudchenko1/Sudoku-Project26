@@ -19,13 +19,13 @@ class SudokuGenerator:
 
     def valid_in_row(self, row, num):
         for i in range(self.row_length):
-            if self.board[i][row] == num:
+            if self.board[row][i] == num:
                 return False
         return True
 
     def valid_in_col(self, col, num):
         for i in range(self.row_length):
-            if self.board[col][i] == num:
+            if self.board[i][col] == num:
                 return False
         return True
 
