@@ -96,6 +96,7 @@ class SudokuGenerator:
             if self.board[row][col] != 0:
                 self.board[row][col] = 0
                 remove_count += 1
+        return None
 
 
 def generate_sudoku(size, removed):
