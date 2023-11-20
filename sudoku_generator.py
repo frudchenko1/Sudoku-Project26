@@ -12,7 +12,10 @@ class SudokuGenerator:
 
     def print_board(self):
         for row in self.board:
-            print(row)
+            for int in row:
+                print(int, ' ')
+            print()
+        raturn None
 
     def valid_in_row(self, row, num):
         for i in range(self.row_length):
