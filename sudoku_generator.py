@@ -16,7 +16,7 @@ class SudokuGenerator:
 
     def valid_in_row(self, row, num):
         for i in range(self.row_length):
-            if self.board[row][i] == num:
+            if self.board[i][row] == num:
                 return False
         return True
 
