@@ -65,11 +65,10 @@ if __name__ == "__main__":
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Sudoku")
+    screen.fill(BG_COLOR)
 
     while True:
         # event loop
-        screen.fill(BG_COLOR)
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
