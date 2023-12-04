@@ -80,16 +80,57 @@ def draw_game_start(screen):
     pass
 
 def draw_game_over(screen):
-    game_over_font = pygame.font.Font(None, 40)
-    screen.fill(BG_COLOR)
-    if winner != 0:
-        text = "Game Won!"
-    else:
-        text = "Game Over"
-    game_over_surf = game_over_font.render(text, 0, LINE_COLOR)
-    game_over_rect = game_over_surf.get_rect(
-        center=(WIDTH // 2, HEIGHT // 2- 100))
-    screen.blit(game_over_surf, game_over_rect)
+    while game_over == True:
+        game_over_font = pygame.font.Font(None, 90)
+
+        screen.fill(BG_COLOR)
+        if winner != 0:
+            text = "Game Won!"
+
+            exit_button = pygame.Rect(WIDTH // 2 - 100, HEIGHT // 2 + 50, 200, 50)
+            pygame.draw.rect(screen, (193, 205, 205), exit_button)
+            exit_button_font = pygame.font.Font(None, 36)
+            exit_button_text = exit_button_font.render("Exit", True, BLACK)
+            exit_button_text_rect = exit_button_text.get_rect(center=exit_button.center)
+            screen.blit(exit_button_text, exit_button_text_rect)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_pos = pygame.mouse.get_pos()
+                    if exit_button.collidepoint(mouse_pos):
+                        pygame.quit()
+                        sys.exit()
+        else:
+            text = "Game Over"
+
+            restart_button = pygame.Rect(WIDTH // 2 - 100, HEIGHT // 2 + 50, 200, 50)
+            pygame.draw.rect(screen, (193, 205, 205), restart_button)
+            restart_button_font = pygame.font.Font(None, 36)
+            restart_button_text = restart_button_font.render("Restart", True, BLACK)
+            restart_button_text_rect = restart_button_text.get_rect(center=restart_button.center)
+            screen.blit(restart_button_text, restart_button_text_rect)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_pos = pygame.mouse.get_pos()
+                    if restart_button.collidepoint(mouse_pos):
+                        pygame.quit()
+                        sys.exit()
+
+        game_over_surf = game_over_font.render(text, 0, BLACK)
+        game_over_rect = game_over_surf.get_rect(
+            center=(WIDTH // 2, HEIGHT // 2 - 100))
+
+        # Display title and subtitle text
+        screen.blit(game_over_surf, game_over_rect)
+
+        pygame.display.update()
 
 
 if __name__ == "__main__":
