@@ -35,11 +35,12 @@ class Board:
         self.height = height
         self.screen = screen
         self.difficulty = difficulty
+        self.cells = [[Cell(0, row, col, screen) for col in range(width)] for row in range(height)]
 
     def draw(self):
         self.screen.fill(BG_COLOR)
-        for row in range(self.rows):
-            for col in range(self.cols):
+        for row in range(self.width):
+            for col in range(self.height):
                 cell = self.cells[row][col]
                 cell.draw()
         pygame.display.update()
