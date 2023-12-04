@@ -22,9 +22,12 @@ class Cell:
         cell_width, cell_height = SQUARE_SIZE
 
         pygame.draw.rect(self.screen, BLACK, (x_dimension, y_dimension, cell_width, cell_height), 1)
-        
-        pass
 
+        if self.value != 0:
+            value_font = pygame.font.Font(None, 35)
+            value = value_font.render(str(self.value), True, BLACK)
+            value_rect = value.get_rect(center=(x_dimension + cell_width // 2, y_dimension + cell_height // 2))
+            self.screen.blit(value, value_rect)
 
 class Board:
     def __init__(self, width, height, screen, difficulty):
