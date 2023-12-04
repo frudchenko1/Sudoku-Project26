@@ -109,8 +109,10 @@ def draw_game_start(screen):
 
         pygame.display.update()
 
+
 def game_in_progress(screen):
     pass
+
 
 def draw_game_over(screen):
     while game_over == True:
