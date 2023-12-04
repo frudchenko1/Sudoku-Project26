@@ -63,7 +63,11 @@ class Board:
         pass
 
     def is_full(self):
-        pass
+        for row in range(self.rows):
+            for col in range(self.cols):
+                if self.cells[row][col].is_empty():
+                    return False
+        return True
 
     def update_board(self):
         pass
