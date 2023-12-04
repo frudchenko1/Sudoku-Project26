@@ -93,11 +93,18 @@ def draw_game_over(screen):
 
 
 if __name__ == "__main__":
+    game_over = False
+    winner = 0
+    
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Sudoku")
-    screen.fill(BG_COLOR)
 
+    draw_game-start(screen)
+
+    # Color background
+    screen.fill(BG_COLOR)
+    
     while True:
         # event loop
         for event in pygame.event.get():
