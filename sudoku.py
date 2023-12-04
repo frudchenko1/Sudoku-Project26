@@ -67,7 +67,7 @@ def draw_game_start(screen):
     start_subtitle_font = pygame.font.Font(None, 50)  # Larger subtitle font
     button_font = pygame.font.Font(None, 25)  # Smaller button font
 
-    # Define button colors
+    # Difficulty options variable for referencing via index 
     difficulties = ["Easy", "Medium", "Hard"]
 
     # Define title and subtitle text
