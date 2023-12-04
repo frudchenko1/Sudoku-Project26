@@ -34,7 +34,12 @@ class Board:
         self.difficulty = difficulty
 
     def draw(self):
-        pass
+        self.screen.fill(BG_COLOR)
+        for row in range(self.rows):
+            for col in range(self.cols):
+                cell = self.cells[row][col]
+                cell.draw()
+        pygame.display.update()
 
     def select(self, row, col):
         pass
