@@ -1,5 +1,6 @@
 import math, random
 
+
 class SudokuGenerator:
     def __init__(self, row_length, removed_cells):
         self.row_length = row_length
@@ -15,7 +16,7 @@ class SudokuGenerator:
             for int in row:
                 print(int, ' ')
             print()
-        
+        return None
 
     def valid_in_row(self, row, num):
         for i in range(self.row_length):
