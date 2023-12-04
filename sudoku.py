@@ -85,13 +85,12 @@ def draw_game_start(screen):
         screen.blit(title_text, title_text_rect)
         screen.blit(subtitle_text, subtitle_text_rect)
 
-        # Display buttons horizontally
         button_width = 150
         total_width = 3 * button_width
         start_position = (WIDTH - total_width - 20) // 2
 
         for i, difficulty in enumerate(difficulties):
-            button_position = start_position + i * (button_width + 20)
+            button_position = start_position + i * (button_width + 20) # Displaying buttons side by side
             difficulty_button = pygame.Rect(button_position, HEIGHT // 2 + 50, button_width, 50)
             pygame.draw.rect(screen, (193, 205, 205), difficulty_button)
 
