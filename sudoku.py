@@ -45,13 +45,15 @@ class Board:
         pygame.display.update()
 
     def select(self, row, col):
-        pass
+        return self.cells[row][col]
 
     def click(self, x, y):
-        pass
+        row = y // SQUARE_SIZE
+        col = x // SQUARE_SIZE
+        return self.cells[row][col]
 
     def clear(self):
-        pass
+        self.value = 0
 
     def sketch(self, value):
         pass
