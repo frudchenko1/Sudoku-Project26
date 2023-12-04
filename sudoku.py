@@ -168,7 +168,7 @@ if __name__ == "__main__":
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Sudoku")
 
-    draw_game-start(screen)
+    draw_game_start(screen)
 
     # Color background
     screen.fill(BG_COLOR)
