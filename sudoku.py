@@ -21,7 +21,7 @@ class Cell:
         y_dimension = self.row * SQUARE_SIZE
         cell_width, cell_height = SQUARE_SIZE
 
-        pygame.draw.rect(self.screen, BLACK, (x_dimension, y_dimension, cell_width, cell_height, 1)
+        pygame.draw.rect(self.screen, BLACK, (x_dimension, y_dimension, cell_width, cell_height), 1)
         
         pass
 
