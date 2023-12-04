@@ -64,20 +64,51 @@ class Board:
 def draw_game_start(screen):
     #Initialize title font
     start_title_font = pygame.font.Font(None, 70)
-    start_subtitle_font = pygame.font.Font(None, 50)  # Larger subtitle font
-    button_font = pygame.font.Font(None, 25)  # Smaller button font
+    start_subtitle_font = pygame.font.Font(None, 50)
+    button_font = pygame.font.Font(None, 25)
 
-    # Difficulty options variable for referencing via index 
+    # Define button colors
     difficulties = ["Easy", "Medium", "Hard"]
 
-    # Define title and subtitle text
+    # Define title text
     title_text = start_title_font.render("Welcome to Sudoku", True, BLACK)
     title_text_rect = title_text.get_rect(center=(WIDTH // 2, HEIGHT // 4))
 
+    # Define subtitle text
     subtitle_text = start_subtitle_font.render("Select Game Mode:", True, BLACK)
     subtitle_text_rect = subtitle_text.get_rect(
-        center=(WIDTH // 2, title_text_rect.bottom + 60)) 
-    pass
+        center=(WIDTH // 2, title_text_rect.bottom + 60))
+
+    while True:
+        screen.fill(BG_COLOR)
+        # Display title and subtitle text
+        screen.blit(title_text, title_text_rect)
+        screen.blit(subtitle_text, subtitle_text_rect)
+
+        # Display buttons horizontally
+        button_width = 150
+        total_width = 3 * button_width
+        start_position = (WIDTH - total_width - 20) // 2
+
+        for i, difficulty in enumerate(difficulties):
+            button_position = start_position + i * (button_width + 20)
+            difficulty_button = pygame.Rect(button_position, HEIGHT // 2 + 50, button_width, 50)
+            pygame.draw.rect(screen, (193, 205, 205), difficulty_button)
+
+            text = button_font.render(difficulty, True, (0, 0, 0))
+            text_rect = text.get_rect(center=difficulty_button.center)
+            screen.blit(text, text_rect)
+
+        # Event loop
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_position = pygame.mouse.get_pos()
+
+        pygame.display.update()
 
 def draw_game_over(screen):
     while game_over == True:
@@ -131,7 +162,6 @@ def draw_game_over(screen):
         screen.blit(game_over_surf, game_over_rect)
 
         pygame.display.update()
-
 
 if __name__ == "__main__":
     game_over = False
