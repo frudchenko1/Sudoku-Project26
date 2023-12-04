@@ -150,9 +150,7 @@ def draw_game_over(screen):
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_pos = pygame.mouse.get_pos()
                     if restart_button.collidepoint(mouse_pos):
-                        pygame.quit()
-                        sys.exit()
-
+                        draw_game_start(screen)
         game_over_surf = game_over_font.render(text, 0, BLACK)
         game_over_rect = game_over_surf.get_rect(
             center=(WIDTH // 2, HEIGHT // 2 - 100))
