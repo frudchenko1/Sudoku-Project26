@@ -61,6 +61,24 @@ class Board:
         pass
 
 
+def draw_game_start(screen):
+    #Initialize title font
+    start_title_font = pygame.font.Font(None, 70)
+    start_subtitle_font = pygame.font.Font(None, 50)  # Larger subtitle font
+    button_font = pygame.font.Font(None, 25)  # Smaller button font
+
+    # Define button colors
+    difficulties = ["Easy", "Medium", "Hard"]
+
+    # Define title and subtitle text
+    title_text = start_title_font.render("Welcome to Sudoku", True, BLACK)
+    title_text_rect = title_text.get_rect(center=(WIDTH // 2, HEIGHT // 4))
+
+    subtitle_text = start_subtitle_font.render("Select Game Mode:", True, BLACK)
+    subtitle_text_rect = subtitle_text.get_rect(
+        center=(WIDTH // 2, title_text_rect.bottom + 60)) 
+    pass
+
 def draw_game_over(screen):
     game_over_font = pygame.font.Font(None, 40)
     screen.fill(BG_COLOR)
