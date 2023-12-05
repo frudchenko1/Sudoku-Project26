@@ -14,9 +14,9 @@ class Cell:
         self.value = value
 
     def set_sketched_value(self, value):
-        pass
+        self.value = value
 
-    def draw(self):
+    def draw(self, screen):
         x_dimension = self.col * SQUARE_SIZE
         y_dimension = self.row * SQUARE_SIZE
         cell_width, cell_height = SQUARE_SIZE
@@ -28,6 +28,7 @@ class Cell:
             value = value_font.render(str(self.value), True, BLACK)
             value_rect = value.get_rect(center=(x_dimension + cell_width // 2, y_dimension + cell_height // 2))
             self.screen.blit(value, value_rect)
+
 
 class Board:
     def __init__(self, width, height, screen, difficulty):
@@ -83,7 +84,7 @@ class Board:
 
 
 def draw_game_start(screen):
-    #Initialize title font
+    # Initialize title font
     start_title_font = pygame.font.Font(None, 70)
     start_subtitle_font = pygame.font.Font(None, 50)
     button_font = pygame.font.Font(None, 25)
@@ -111,7 +112,7 @@ def draw_game_start(screen):
         start_position = (WIDTH - total_width - 20) // 2
 
         for i, difficulty in enumerate(difficulties):
-            button_position = start_position + i * (button_width + 20) # Displaying buttons side by side
+            button_position = start_position + i * (button_width + 20)  # Displaying buttons side by side
             difficulty_button = pygame.Rect(button_position, HEIGHT // 2 + 50, button_width, 50)
             pygame.draw.rect(screen, (193, 205, 205), difficulty_button)
 
@@ -126,7 +127,12 @@ def draw_game_start(screen):
                 sys.exit()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_position = pygame.mouse.get_pos()
+                x, y = event.pos
+                row = y // SQUARE_SIZE
+                col = x // SQUARE_SIZE
+                if row, col == 
+                board = Board(BOARD_ROWS, BOARD_COLS, WIDTH, HEIGHT, screen)
+                board.draw()
 
         pygame.display.update()
 
@@ -174,7 +180,6 @@ def draw_game_over(screen):
                     pygame.quit()
                     sys.exit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    mouse_pos = pygame.mouse.get_pos()
                     if restart_button.collidepoint(mouse_pos):
                         draw_game_start(screen)
         game_over_surf = game_over_font.render(text, 0, BLACK)
@@ -186,10 +191,11 @@ def draw_game_over(screen):
 
         pygame.display.update()
 
+
 if __name__ == "__main__":
     game_over = False
     winner = 0
-    
+
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Sudoku")
@@ -198,13 +204,17 @@ if __name__ == "__main__":
 
     # Color background
     screen.fill(BG_COLOR)
-    
+
     while True:
         # event loop
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                if mouse_pos ==
+                board = Board(WIDTH, HEIGHT, screen, difficulty='Hard')
+                board.draw()
         pygame.display.update()
-
 
