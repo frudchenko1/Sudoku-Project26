@@ -111,7 +111,6 @@ def draw_game_start(screen):
 
     while True:
         screen.fill(BG_COLOR)
-        # Display title and subtitle text
         screen.blit(title_text, title_text_rect)
         screen.blit(subtitle_text, subtitle_text_rect)
 
@@ -120,8 +119,8 @@ def draw_game_start(screen):
         start_position = (WIDTH - total_width - 20) // 2
 
         for i, difficulty in enumerate(difficulties):
-            button_position = start_position + i * (button_width + 20)  # Displaying buttons side by side
-            difficulty_button = pygame.Rect(button_position, HEIGHT // 2 + 150, button_width, 50)  # Adjust the vertical position
+            button_position = start_position + i * (button_width + 20)  
+            difficulty_button = pygame.Rect(button_position, HEIGHT // 2 + 150, button_width, 50)  
             pygame.draw.rect(screen, (193, 205, 205), difficulty_button)
 
             text = button_font.render(difficulty, True, (0, 0, 0))
@@ -151,8 +150,8 @@ def draw_game_start(screen):
 
 
 def game_in_progress(screen, difficulty):
-    board = Board(WIDTH, HEIGHT, difficulty)  # Initialize the board with selected difficulty
-    board.draw()  # Draw the board initially
+    board = Board(WIDTH, HEIGHT, difficulty)
+    board.draw() 
 
     while True:
         for event in pygame.event.get():
@@ -225,11 +224,9 @@ if __name__ == "__main__":
 
     draw_game_start(screen)
 
-    # Color background
     screen.fill(BG_COLOR)
 
     while True:
-        # event loop
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
