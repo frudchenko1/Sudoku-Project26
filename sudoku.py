@@ -107,7 +107,7 @@ def draw_game_start(screen):
     # Define subtitle text
     subtitle_text = start_subtitle_font.render("Select Game Mode:", True, BLACK)
     subtitle_text_rect = subtitle_text.get_rect(
-        center=(WIDTH // 2, title_text_rect.bottom + 60))
+        center=(WIDTH // 2, title_text_rect.bottom + 70))
 
     while True:
         screen.fill(BG_COLOR)
@@ -120,7 +120,7 @@ def draw_game_start(screen):
 
         for i, difficulty in enumerate(difficulties):
             button_position = start_position + i * (button_width + 20)  
-            difficulty_button = pygame.Rect(button_position, HEIGHT // 2 + 150, button_width, 50)  
+            difficulty_button = pygame.Rect(button_position, HEIGHT // 2, button_width, 50)  
             pygame.draw.rect(screen, (193, 205, 205), difficulty_button)
 
             text = button_font.render(difficulty, True, (0, 0, 0))
