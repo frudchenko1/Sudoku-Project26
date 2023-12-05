@@ -13,19 +13,21 @@ class Cell:
     def set_cell_value(self, value):
         self.value = value
 
-    def set_sketched_value(self, value):
-        self.value = value
-
     def draw(self):
+        cell_width = WIDTH // (BOARD_COLS * BOARD_ROWS)
+        cell_height = HEIGHT // (BOARD_COLS * BOARD_ROWS)
 
-        pygame.draw.rect(self.screen, BLACK, (self.col * SQUARE_SIZE, self.row * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE), 1)
+        x_dimension = self.col * cell_width
+        y_dimension = self.row * cell_height
 
-        if self.value != 0:
-            value_font = pygame.font.Font(None, 35)
-            value = value_font.render(str(self.value), True, BLACK)
-            value_rect = value.get_rect(center=(self.col * SQUARE_SIZE + SQUARE_SIZE // 2, self.row * SQUARE_SIZE + SQUARE_SIZE // 2))
-            self.screen.blit(value, value_rect)
+        # Inner lines within 3 x 3
+        pygame.draw.rect(self.screen, BLACK, (x_dimension, y_dimension, cell_width, cell_height), 1)
 
+        # Border lines outlining the 3 x 3
+        if self.row % 3 == 0:
+            pygame.draw.line(self.screen, AZURE4, (x_dimension, y_dimension), (x_dimension + WIDTH // BOARD_ROWS, y_dimension), LINE_WIDTH)
+        if self.col % 3 == 0:
+            pygame.draw.line(self.screen, AZURE4, (x_dimension, y_dimension), (x_dimension, y_dimension + HEIGHT // BOARD_COLS), LINE_WIDTH)
 
 class Board:
     def __init__(self, width, height, difficulty):
