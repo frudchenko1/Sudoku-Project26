@@ -13,9 +13,12 @@ class Cell:
     def set_cell_value(self, value):
         self.value = value
 
+    def set_sketched_value(self, value):
+        self.value = value
+
     def draw(self):
         cell_width = WIDTH // (BOARD_COLS * BOARD_ROWS)
-        cell_height = HEIGHT // (BOARD_COLS * BOARD_ROWS)
+        cell_height = 600 // (BOARD_COLS * BOARD_ROWS)
 
         x_dimension = self.col * cell_width
         y_dimension = self.row * cell_height
@@ -29,6 +32,8 @@ class Cell:
         if self.col % 3 == 0:
             pygame.draw.line(self.screen, AZURE4, (x_dimension, y_dimension), (x_dimension, y_dimension + HEIGHT // BOARD_COLS), LINE_WIDTH)
 
+
+
 class Board:
     def __init__(self, width, height, difficulty):
         self.width = width
@@ -39,10 +44,13 @@ class Board:
 
     def draw(self):
         self.screen.fill(BG_COLOR)
+
         for row in range(self.width):
             for col in range(self.height):
                 cell = self.cells[row][col]
                 cell.draw()
+
+        pygame.draw.rect(screen, BG_COLOR, (0, 600, WIDTH, 100))
         pygame.display.update()
 
     def select(self, row, col):
@@ -112,8 +120,8 @@ def draw_game_start(screen):
         start_position = (WIDTH - total_width - 20) // 2
 
         for i, difficulty in enumerate(difficulties):
-            button_position = start_position + i * (button_width + 20)  # Displaying buttons side by side
-            difficulty_button = pygame.Rect(button_position, HEIGHT // 2 + 50, button_width, 50)
+            button_position = start_position + i * (button_width + 20)  
+            difficulty_button = pygame.Rect(button_position, HEIGHT // 2 + 150, button_width, 50)  
             pygame.draw.rect(screen, (193, 205, 205), difficulty_button)
 
             text = button_font.render(difficulty, True, (0, 0, 0))
@@ -135,15 +143,16 @@ def draw_game_start(screen):
                     difficulty = 'Medium'
                 elif col == 2:
                     difficulty = 'Hard'
-                board = Board(WIDTH, HEIGHT, difficulty)
+                board = Board(WIDTH, HEIGHT - 100, difficulty)
         if board:
             board.draw()
+
         pygame.display.update()
 
 
 def game_in_progress(screen, difficulty):
-    board = Board(WIDTH, HEIGHT, difficulty)  # Initialize the board with selected difficulty
-    board.draw()  # Draw the board initially
+    board = Board(WIDTH, HEIGHT, difficulty)  
+    board.draw()  
 
     while True:
         for event in pygame.event.get():
@@ -152,7 +161,6 @@ def game_in_progress(screen, difficulty):
                 sys.exit()
 
         pygame.display.update()
-
 
 
 def draw_game_over(screen):
@@ -200,7 +208,6 @@ def draw_game_over(screen):
         game_over_rect = game_over_surf.get_rect(
             center=(WIDTH // 2, HEIGHT // 2 - 100))
 
-        # Display title and subtitle text
         screen.blit(game_over_surf, game_over_rect)
 
         pygame.display.update()
@@ -237,4 +244,3 @@ if __name__ == "__main__":
                     difficulty = 'Hard'
                 game_in_progress(screen, difficulty)
         pygame.display.update()
-
