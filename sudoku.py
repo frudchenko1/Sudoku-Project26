@@ -16,7 +16,7 @@ class Cell:
     def set_sketched_value(self, value):
         self.value = value
 
-    def draw(self, screen):
+    def draw(self):
         x_dimension = self.col * SQUARE_SIZE
         y_dimension = self.row * SQUARE_SIZE
         cell_width, cell_height = SQUARE_SIZE
@@ -31,7 +31,7 @@ class Cell:
 
 
 class Board:
-    def __init__(self, width, height, screen, difficulty):
+    def __init__(self, width, height, difficulty):
         self.width = width
         self.height = height
         self.screen = screen
@@ -130,8 +130,14 @@ def draw_game_start(screen):
                 x, y = event.pos
                 row = y // SQUARE_SIZE
                 col = x // SQUARE_SIZE
-                if row, col == 
-                board = Board(BOARD_ROWS, BOARD_COLS, WIDTH, HEIGHT, screen)
+                if col == 0:
+                    difficulty = 'Easy'
+                elif col == 1:
+                    difficulty = 'Medium'
+                elif col == 2:
+                    difficulty = 'Hard'
+                print(difficulty)
+                board = Board(WIDTH, HEIGHT, difficulty)
                 board.draw()
 
         pygame.display.update()
@@ -213,8 +219,5 @@ if __name__ == "__main__":
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
-                if mouse_pos ==
-                board = Board(WIDTH, HEIGHT, screen, difficulty='Hard')
-                board.draw()
         pygame.display.update()
 
