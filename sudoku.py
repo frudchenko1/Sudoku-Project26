@@ -139,8 +139,18 @@ def draw_game_start(screen):
         pygame.display.update()
 
 
-def game_in_progress(screen):
-    pass
+def game_in_progress(screen, difficulty):
+    board = Board(WIDTH, HEIGHT, difficulty)  # Initialize the board with selected difficulty
+    board.draw()  # Draw the board initially
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        pygame.display.update()
+
 
 
 def draw_game_over(screen):
@@ -223,7 +233,6 @@ if __name__ == "__main__":
                     difficulty = 'Medium'
                 elif col == 2:
                     difficulty = 'Hard'
-                board = Board(WIDTH, HEIGHT, difficulty)
-                board.draw()
+                game_in_progress(screen, difficulty)
         pygame.display.update()
 
