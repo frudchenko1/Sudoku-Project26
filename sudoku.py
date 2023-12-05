@@ -17,16 +17,13 @@ class Cell:
         self.value = value
 
     def draw(self):
-        x_dimension = self.col * SQUARE_SIZE
-        y_dimension = self.row * SQUARE_SIZE
-        cell_width, cell_height = SQUARE_SIZE
 
-        pygame.draw.rect(self.screen, BLACK, (x_dimension, y_dimension, cell_width, cell_height), 1)
+        pygame.draw.rect(self.screen, BLACK, (self.col * SQUARE_SIZE, self.row * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE), 1)
 
         if self.value != 0:
             value_font = pygame.font.Font(None, 35)
             value = value_font.render(str(self.value), True, BLACK)
-            value_rect = value.get_rect(center=(x_dimension + cell_width // 2, y_dimension + cell_height // 2))
+            value_rect = value.get_rect(center=(self.col * SQUARE_SIZE + SQUARE_SIZE // 2, self.row * SQUARE_SIZE + SQUARE_SIZE // 2))
             self.screen.blit(value, value_rect)
 
 
@@ -88,6 +85,7 @@ def draw_game_start(screen):
     start_title_font = pygame.font.Font(None, 70)
     start_subtitle_font = pygame.font.Font(None, 50)
     button_font = pygame.font.Font(None, 25)
+    board = None
 
     # Define button colors
     difficulties = ["Easy", "Medium", "Hard"]
@@ -128,7 +126,6 @@ def draw_game_start(screen):
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = event.pos
-                row = y // SQUARE_SIZE
                 col = x // SQUARE_SIZE
                 if col == 0:
                     difficulty = 'Easy'
@@ -136,10 +133,9 @@ def draw_game_start(screen):
                     difficulty = 'Medium'
                 elif col == 2:
                     difficulty = 'Hard'
-                print(difficulty)
                 board = Board(WIDTH, HEIGHT, difficulty)
-                board.draw()
-
+        if board:
+            board.draw()
         pygame.display.update()
 
 
@@ -218,6 +214,16 @@ if __name__ == "__main__":
                 pygame.quit()
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_pos = pygame.mouse.get_pos()
+                x, y = event.pos
+                row = y // SQUARE_SIZE
+                col = x // SQUARE_SIZE
+                if col == 0:
+                    difficulty = 'Easy'
+                elif col == 1:
+                    difficulty = 'Medium'
+                elif col == 2:
+                    difficulty = 'Hard'
+                board = Board(WIDTH, HEIGHT, difficulty)
+                board.draw()
         pygame.display.update()
 
