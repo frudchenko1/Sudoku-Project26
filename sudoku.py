@@ -49,9 +49,37 @@ class Board:
             for col in range(self.height):
                 cell = self.cells[row][col]
                 cell.draw()
-
         pygame.draw.rect(screen, BG_COLOR, (0, 600, WIDTH, 100))
-        pygame.display.update()
+        button_font = pygame.font.Font(None, 25)
+        menu_buttons = ["Reset", "Restart", "Exit"]
+
+        while True:
+            button_width = 150
+            total_width = 3 * button_width
+            start_position = (WIDTH - total_width - 20) // 2 - 10
+
+            for i, button_text in enumerate(menu_buttons):
+                button_position = start_position + i * (button_width + 20)
+                button_rect = pygame.Rect(button_position, HEIGHT - 80, button_width, 50)
+                pygame.draw.rect(screen, (193, 205, 205), button_rect)
+
+                text = button_font.render(button_text, True, BLACK)
+                text_rect = text.get_rect(center=button_rect.center)
+                screen.blit(text, text_rect)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    x, y = event.pos
+                    if WIDTH // 2 - 100 <= x <= WIDTH // 2 + 100 and HEIGHT // 2 + 50 <= y <= HEIGHT // 2 + 100:
+                        pygame.quit()
+                        sys.exit()
+                        # Check if the Restart button is clicked
+                    elif WIDTH // 2 - 100 <= x <= WIDTH // 2 + 100 and HEIGHT // 2 + 50 <= y <= HEIGHT // 2 + 100:
+                        draw_game_start(screen)
+
+            pygame.display.update()
 
     def select(self, row, col):
         return self.cells[row][col]
@@ -116,11 +144,11 @@ def draw_game_start(screen):
 
         button_width = 150
         total_width = 3 * button_width
-        start_position = (WIDTH - total_width - 20) // 2
+        start_position = (WIDTH - total_width - 20) // 2 - 10
 
         for i, difficulty in enumerate(difficulties):
-            button_position = start_position + i * (button_width + 20)  
-            difficulty_button = pygame.Rect(button_position, HEIGHT // 2, button_width, 50)  
+            button_position = start_position + i * (button_width + 20)
+            difficulty_button = pygame.Rect(button_position, HEIGHT // 2, button_width, 50)
             pygame.draw.rect(screen, (193, 205, 205), difficulty_button)
 
             text = button_font.render(difficulty, True, (0, 0, 0))
@@ -151,7 +179,7 @@ def draw_game_start(screen):
 
 def game_in_progress(screen, difficulty):
     board = Board(WIDTH, HEIGHT, difficulty)
-    board.draw() 
+    board.draw()
 
     while True:
         for event in pygame.event.get():
@@ -160,7 +188,6 @@ def game_in_progress(screen, difficulty):
                 sys.exit()
 
         pygame.display.update()
-
 
 
 def draw_game_over(screen):
