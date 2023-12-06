@@ -23,6 +23,9 @@ class Cell:
     def highlight(self):
         self.highlighted = True
 
+    def input_number(self, number):
+        if 1 <= number <= 9:  # Ensure input is within the range of a Sudoku cell
+            self.value = number
     def clear_highlight(self):
         self.highlighted = False
 
@@ -88,14 +91,35 @@ class Board:
                     x, y = pygame.mouse.get_pos()
                     row = y // (600 // (BOARD_COLS * BOARD_ROWS))
                     col = x // (WIDTH // (BOARD_COLS * BOARD_ROWS))
-                    clicked_cell = self.cells[row][col]
                     if self.selected_cell:
                         self.selected_cell.clear_highlight()
-
-                    # Highlight the newly selected cell
                     self.selected_cell = self.cells[row][col]
                     self.selected_cell.highlight()
                     self.draw()
+                elif event.type == pygame.KEYDOWN:
+                    x, y = pygame.mouse.get_pos()
+                    row = y // (600 // (BOARD_COLS * BOARD_ROWS))
+                    col = x // (WIDTH // (BOARD_COLS * BOARD_ROWS))
+                    clicked_cell = self.cells[row][col]
+                    if event.key == pygame.K_1:
+                        clicked_cell.input_number(1)
+                    elif event.key == pygame.K_2:
+                        clicked_cell.input_number(2)
+                    elif event.key == pygame.K_3:
+                        clicked_cell.input_number(3)
+                    elif event.key == pygame.K_4:
+                        clicked_cell.input_number(4)
+                    elif event.key == pygame.K_5:
+                        clicked_cell.input_number(5)
+                    elif event.key == pygame.K_6:
+                        clicked_cell.input_number(6)
+                    elif event.key == pygame.K_7:
+                        clicked_cell.input_number(7)
+                    elif event.key == pygame.K_8:
+                        clicked_cell.input_number(8)
+                    elif event.key == pygame.K_9:
+                        clicked_cell.input_number(9)
+
             button_width = 150
             total_width = 3 * button_width
             start_position = (WIDTH - total_width - 20) // 2 - 10
