@@ -41,15 +41,22 @@ class Cell:
 
         # Border lines outlining the 3 x 3
         if self.row % 3 == 0:
-            pygame.draw.line(self.screen, AZURE4, (x_dimension, y_dimension), (x_dimension + WIDTH // BOARD_ROWS, y_dimension), LINE_WIDTH)
+            pygame.draw.line(self.screen, AZURE4, (x_dimension, y_dimension),
+                             (x_dimension + WIDTH // BOARD_ROWS, y_dimension), LINE_WIDTH)
         if self.col % 3 == 0:
-            pygame.draw.line(self.screen, AZURE4, (x_dimension, y_dimension), (x_dimension, y_dimension + HEIGHT // BOARD_COLS), LINE_WIDTH)
+            pygame.draw.line(self.screen, AZURE4, (x_dimension, y_dimension),
+                             (x_dimension, y_dimension + HEIGHT // BOARD_COLS), LINE_WIDTH)
 
-        if self.selected:
-            pygame.draw.rect(self.screen, RED, (x_dimension, y_dimension, cell_width, cell_height), LINE_WIDTH // BOARD_COLS // BOARD_COLS)
+        # Ensure that the select is within 600 x 600
+        while 0 <= x_dimension < 550 and 0 <= y_dimension < 550:
+            if self.selected:
+                pygame.draw.rect(self.screen, RED, (x_dimension, y_dimension, cell_width, cell_height),
+                                 LINE_WIDTH // BOARD_COLS // BOARD_COLS)
 
-        if self.highlighted:
-            pygame.draw.rect(self.screen, RED, (x_dimension, y_dimension, cell_width, cell_height), 3)
+            if self.highlighted:
+                pygame.draw.rect(self.screen, RED, (x_dimension, y_dimension, cell_width, cell_height), 3)
+
+            break  # Break out of the loop after drawing if conditions are met
 
         if self.value != 0:
             value_font = pygame.font.Font(None, 60)
