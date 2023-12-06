@@ -64,6 +64,7 @@ class Board:
                     pygame.quit()
                     sys.exit()
 
+
             button_width = 150
             total_width = 3 * button_width
             start_position = (WIDTH - total_width - 20) // 2 - 10
