@@ -20,12 +20,14 @@ class Cell:
 
     def set_selected(self, selected):
         self.selected = selected
+
     def highlight(self):
         self.highlighted = True
 
     def input_number(self, number):
         if 1 <= number <= 9:  # Ensure input is within the range of a Sudoku cell
             self.value = number
+
     def clear_highlight(self):
         self.highlighted = False
 
@@ -75,7 +77,6 @@ class Board:
         self.selected = None
         self.screen = screen
         self.selected_cell = None
-
 
     def draw(self):
         self.screen.fill(BG_COLOR)
@@ -131,27 +132,36 @@ class Board:
             total_width = 3 * button_width
             start_position = (WIDTH - total_width - 20) // 2 - 10
 
-            for i, button_text in enumerate(menu_buttons):
-                button_position = start_position + i * (button_width + 20)
-                button_rect = pygame.Rect(button_position, HEIGHT - 80, button_width, 50)
-                pygame.draw.rect(screen, (193, 205, 205), button_rect)
-
-                text = button_font.render(button_text, True, BLACK)
-                text_rect = text.get_rect(center=button_rect.center)
-                screen.blit(text, text_rect)
-
-                restart_button_rect = pygame.Rect(225, 620, 150, 50)
-                exit_button_rect = pygame.Rect(395, 620, 150, 50)
-                
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pass
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    x, y = event.pos
-                    if restart_button_rect.collidepoint(x,y):
-                        draw_game_start(screen)
-                    if exit_button_rect.collidepoint(x,y):
-                        pygame.quit()
-                        sys.exit()
-            pygame.display.update()
+                        x, y = event.pos
 
+                        # Check if any menu button is clicked
+                        for i, button_text in enumerate(menu_buttons):
+                            button_position = start_position + i * (button_width + 20)
+                            button_rect = pygame.Rect(button_position, HEIGHT - 80, button_width, 50)
+
+                            if button_rect.collidepoint(x, y):
+                                if button_text == "Restart":
+                                    draw_game_start(screen)
+                                elif button_text == "Exit":
+                                    pygame.quit()
+                                    sys.exit()
+
+                # Draw menu buttons
+                for i, button_text in enumerate(menu_buttons):
+                    button_position = start_position + i * (button_width + 20)
+                    button_rect = pygame.Rect(button_position, HEIGHT - 80, button_width, 50)
+                    pygame.draw.rect(screen, (193, 205, 205), button_rect)
+
+                    text = button_font.render(button_text, True, BLACK)
+                    text_rect = text.get_rect(center=button_rect.center)
+                    screen.blit(text, text_rect)
+
+                # Update display
+                pygame.display.update()
 
     def select(self, row, col):
         return self.cells[row][col]
@@ -245,7 +255,6 @@ def draw_game_start(screen):
 
                 sudoku_board = generate_sudoku(9, removed_cells)
                 board = Board(WIDTH, HEIGHT - 100, screen, removed_cells)
-
 
                 for i in range(len(sudoku_board)):
                     for j in range(len(sudoku_board[i])):
