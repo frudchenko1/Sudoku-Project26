@@ -139,11 +139,17 @@ class Board:
                 text = button_font.render(button_text, True, BLACK)
                 text_rect = text.get_rect(center=button_rect.center)
                 screen.blit(text, text_rect)
-            if self.selected:
-                row, col = self.selected
-                cell_rect = pygame.Rect(col * SQUARE_SIZE, row * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE)
-                pygame.draw.rect(screen, (255, 255, 0), cell_rect, 3)
 
+                restart_button_rect = pygame.Rect(225, 620, 150, 50)
+                exit_button_rect = pygame.Rect(395, 620, 150, 50)
+                
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    x, y = event.pos
+                    if restart_button_rect.collidepoint(x,y):
+                        draw_game_start(screen)
+                    if exit_button_rect.collidepoint(x,y):
+                        pygame.quit()
+                        sys.exit()
             pygame.display.update()
 
 
