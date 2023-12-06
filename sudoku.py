@@ -9,6 +9,8 @@ class Cell:
         self.row = row
         self.col = col
         self.screen = screen
+        self.selected = False
+        self.highlighted = False
 
     def set_cell_value(self, value):
         self.value = value
@@ -16,7 +18,15 @@ class Cell:
     def set_sketched_value(self, value):
         self.value = value
 
-    def draw(self, is_selected):
+    def set_selected(self, selected):
+        self.selected = selected
+    def highlight(self):
+        self.highlighted = True
+
+    def clear_highlight(self):
+        self.highlighted = False
+
+    def draw(self):
         cell_width = WIDTH // (BOARD_COLS * BOARD_ROWS)
         cell_height = 600 // (BOARD_COLS * BOARD_ROWS)
 
@@ -28,14 +38,14 @@ class Cell:
 
         # Border lines outlining the 3 x 3
         if self.row % 3 == 0:
-            pygame.draw.line(self.screen, AZURE4, (x_dimension, y_dimension),
-                             (x_dimension + WIDTH // BOARD_ROWS, y_dimension), LINE_WIDTH)
+            pygame.draw.line(self.screen, AZURE4, (x_dimension, y_dimension), (x_dimension + WIDTH // BOARD_ROWS, y_dimension), LINE_WIDTH)
         if self.col % 3 == 0:
-            pygame.draw.line(self.screen, AZURE4, (x_dimension, y_dimension),
-                             (x_dimension, y_dimension + HEIGHT // BOARD_COLS), LINE_WIDTH)
+            pygame.draw.line(self.screen, AZURE4, (x_dimension, y_dimension), (x_dimension, y_dimension + HEIGHT // BOARD_COLS), LINE_WIDTH)
 
-        # Add a red outline if the cell is selected
-        if pygame.MOUSEBUTTONDOWN:
+        if self.selected:
+            pygame.draw.rect(self.screen, RED, (x_dimension, y_dimension, cell_width, cell_height), LINE_WIDTH // BOARD_COLS // BOARD_COLS)
+
+        if self.highlighted:
             pygame.draw.rect(self.screen, RED, (x_dimension, y_dimension, cell_width, cell_height), 3)
 
         if self.value != 0:
@@ -46,20 +56,25 @@ class Cell:
 
 
 class Board:
-    def __init__(self, width, height, difficulty):
+    def __init__(self, width, height, screen, difficulty):
         self.width = width
         self.height = height
         self.screen = screen
         self.difficulty = difficulty
         self.cells = [[Cell(0, row, col, screen) for col in range(width)] for row in range(height)]
+        self.selected = None
+        self.screen = screen
+        self.selected_cell = None
+
 
     def draw(self):
         self.screen.fill(BG_COLOR)
+        sudoku_board = generate_sudoku(9, self.difficulty)
 
         for row in range(self.width):
             for col in range(self.height):
                 cell = self.cells[row][col]
-                cell.draw(is_selected=None)
+                cell.draw()
         pygame.draw.rect(screen, BG_COLOR, (0, 600, WIDTH, 100))
         button_font = pygame.font.Font(None, 25)
         menu_buttons = ["Reset", "Restart", "Exit"]
@@ -69,7 +84,18 @@ class Board:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    x, y = pygame.mouse.get_pos()
+                    row = y // (600 // (BOARD_COLS * BOARD_ROWS))
+                    col = x // (WIDTH // (BOARD_COLS * BOARD_ROWS))
+                    clicked_cell = self.cells[row][col]
+                    if self.selected_cell:
+                        self.selected_cell.clear_highlight()
 
+                    # Highlight the newly selected cell
+                    self.selected_cell = self.cells[row][col]
+                    self.selected_cell.highlight()
+                    self.draw()
             button_width = 150
             total_width = 3 * button_width
             start_position = (WIDTH - total_width - 20) // 2 - 10
@@ -82,20 +108,13 @@ class Board:
                 text = button_font.render(button_text, True, BLACK)
                 text_rect = text.get_rect(center=button_rect.center)
                 screen.blit(text, text_rect)
-
-                restart_button_rect = pygame.Rect(225, 620, 150, 50)
-                exit_button_rect = pygame.Rect(395, 620, 150, 50)
-
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    x, y = event.pos
-                    if restart_button_rect.collidepoint(x, y):
-                        draw_game_start(screen)
-
-                    if exit_button_rect.collidepoint(x, y):
-                        pygame.quit()
-                        sys.exit()
+            if self.selected:
+                row, col = self.selected
+                cell_rect = pygame.Rect(col * SQUARE_SIZE, row * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE)
+                pygame.draw.rect(screen, (255, 255, 0), cell_rect, 3)
 
             pygame.display.update()
+
 
     def select(self, row, col):
         return self.cells[row][col]
@@ -109,6 +128,8 @@ class Board:
         self.value = 0
 
     def sketch(self, value):
+        self.value = value
+
         pass
 
     def place_number(self, value):
@@ -179,17 +200,15 @@ def draw_game_start(screen):
                 x, y = event.pos
                 col = x // SQUARE_SIZE
                 if col == 0:
-                    difficulty = 'Easy'
                     removed_cells = 30
                 elif col == 1:
-                    difficulty = 'Medium'
                     removed_cells = 40
                 elif col == 2:
-                    difficulty = 'Hard'
                     removed_cells = 50
 
                 sudoku_board = generate_sudoku(9, removed_cells)
-                board = Board(WIDTH, HEIGHT - 100, difficulty)
+                board = Board(WIDTH, HEIGHT - 100, screen, removed_cells)
+
 
                 for i in range(len(sudoku_board)):
                     for j in range(len(sudoku_board[i])):
@@ -203,7 +222,7 @@ def draw_game_start(screen):
 def game_in_progress(screen, difficulty):
     board = Board(WIDTH, HEIGHT, difficulty)
     board.draw()
-    Cell.draw(is_selected=RED)
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -284,10 +303,10 @@ if __name__ == "__main__":
                 row = y // SQUARE_SIZE
                 col = x // SQUARE_SIZE
                 if col == 0:
-                    difficulty = 'Easy'
+                    difficulty = 30
                 elif col == 1:
-                    difficulty = 'Medium'
+                    difficulty = 40
                 elif col == 2:
-                    difficulty = 'Hard'
+                    difficulty = 50
                 game_in_progress(screen, difficulty)
         pygame.display.update()
