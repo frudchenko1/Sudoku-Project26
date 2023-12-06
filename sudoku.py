@@ -32,6 +32,11 @@ class Cell:
         if self.col % 3 == 0:
             pygame.draw.line(self.screen, AZURE4, (x_dimension, y_dimension), (x_dimension, y_dimension + HEIGHT // BOARD_COLS), LINE_WIDTH)
 
+        if self.value != 0:
+            value_font = pygame.font.Font(None, 60)
+            text = value_font.render(str(self.value), True, BLACK)
+            text_rect = text.get_rect(center=(x_dimension + cell_width // 2, y_dimension + cell_height // 2))
+            self.screen.blit(text, text_rect)
 
 
 class Board:
@@ -54,6 +59,11 @@ class Board:
         menu_buttons = ["Reset", "Restart", "Exit"]
 
         while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
             button_width = 150
             total_width = 3 * button_width
             start_position = (WIDTH - total_width - 20) // 2 - 10
@@ -66,18 +76,6 @@ class Board:
                 text = button_font.render(button_text, True, BLACK)
                 text_rect = text.get_rect(center=button_rect.center)
                 screen.blit(text, text_rect)
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    x, y = event.pos
-                    if WIDTH // 2 - 100 <= x <= WIDTH // 2 + 100 and HEIGHT // 2 + 50 <= y <= HEIGHT // 2 + 100:
-                        pygame.quit()
-                        sys.exit()
-                        # Check if the Restart button is clicked
-                    elif WIDTH // 2 - 100 <= x <= WIDTH // 2 + 100 and HEIGHT // 2 + 50 <= y <= HEIGHT // 2 + 100:
-                        draw_game_start(screen)
 
             pygame.display.update()
 
@@ -125,14 +123,13 @@ def draw_game_start(screen):
     button_font = pygame.font.Font(None, 25)
     board = None
 
-    # Define button colors
     difficulties = ["Easy", "Medium", "Hard"]
 
-    # Define title text
+    # title text
     title_text = start_title_font.render("Welcome to Sudoku", True, BLACK)
     title_text_rect = title_text.get_rect(center=(WIDTH // 2, HEIGHT // 4))
 
-    # Define subtitle text
+    # Subtitle text
     subtitle_text = start_subtitle_font.render("Select Game Mode:", True, BLACK)
     subtitle_text_rect = subtitle_text.get_rect(
         center=(WIDTH // 2, title_text_rect.bottom + 70))
@@ -155,7 +152,6 @@ def draw_game_start(screen):
             text_rect = text.get_rect(center=difficulty_button.center)
             screen.blit(text, text_rect)
 
-        # Event loop
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -166,13 +162,22 @@ def draw_game_start(screen):
                 col = x // SQUARE_SIZE
                 if col == 0:
                     difficulty = 'Easy'
+                    removed_cells = 30
                 elif col == 1:
                     difficulty = 'Medium'
+                    removed_cells = 40
                 elif col == 2:
                     difficulty = 'Hard'
+                    removed_cells = 50
+
+                sudoku_board = generate_sudoku(9, removed_cells)
                 board = Board(WIDTH, HEIGHT - 100, difficulty)
-        if board:
-            board.draw()
+
+                for i in range(len(sudoku_board)):
+                    for j in range(len(sudoku_board[i])):
+                        cell_value = int(sudoku_board[i][j])
+                        board.cells[i][j].set_cell_value(cell_value)
+                board.draw()
 
         pygame.display.update()
 
@@ -235,9 +240,7 @@ def draw_game_over(screen):
         game_over_rect = game_over_surf.get_rect(
             center=(WIDTH // 2, HEIGHT // 2 - 100))
 
-        # Display title and subtitle text
         screen.blit(game_over_surf, game_over_rect)
-
         pygame.display.update()
 
 
