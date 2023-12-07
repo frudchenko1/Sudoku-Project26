@@ -41,8 +41,9 @@ class Cell:
             font = self.pygame.font.SysFont(None, 45)
             text = font.render(str(self.value), True, BLACK, BG_COLOR)
             text_rec = text.get_rect(center=(self.row * 67 + 33, self.col * 67 + 33))
-
             self.screen.blit(text, text_rec)
+        else:
+            pass
 
         # Sketched value
         if self.editable:
@@ -57,8 +58,14 @@ class Cell:
 
             self.screen.blit(text, text_rec)
 
+    def draw_blank(self):
+        if self.value == 0:
+            top_left = (self.row * 68, self.col * 68)
+            cell_size = (50, 50)
+            pygame.draw.rect(self.screen, BG_COLOR, (top_left, cell_size))
 
-def draw_startup():
+
+def draw_start_screen():
     start_title_font = pygame.font.SysFont(None, 70)
     start_subtitle_font = pygame.font.SysFont(None, 50)
     button_font = pygame.font.SysFont(None, 25)
@@ -93,8 +100,8 @@ def draw_startup():
         screen.blit(text, text_rect)
 
 
-def startup_loop():
-    draw_startup()
+def start_screen_loop():
+    draw_start_screen()
 
     while True:
 
@@ -166,7 +173,7 @@ def draw_grid(cells):
         screen.blit(text, text_rect)
 
 
-def game_loop(sudoku, board, deleted, win_state):
+def game_in_progress(sudoku, board, deleted, win_state):
     cells = []
     user_text = ""
     current_cell = None
@@ -233,11 +240,8 @@ def game_loop(sudoku, board, deleted, win_state):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_BACKSPACE:
                     if current_cell and current_cell.editable:
-                        current_cell.set_sketched_value(0)
-                        current_cell.set_cell_value(0)
-                        current_cell.editable = False
-                        current_cell.cell_value = current_cell.sketched_value
-                        current_cell.draw()
+                        current_cell.draw_blank()
+
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     if current_cell and current_cell.editable:
@@ -252,6 +256,14 @@ def game_loop(sudoku, board, deleted, win_state):
                         current_cell.editable = True
                         current_cell.set_sketched_value(0)
                         current_cell.draw()
+                        print("Current Board:")
+                        for row in current_board:
+                            print(row)
+
+                        print("Win State:")
+                        for row in win_state:
+                            print(row)
+
 
                 elif event.key == pygame.K_UP:
                     # Move selection upwards
@@ -295,74 +307,36 @@ def game_loop(sudoku, board, deleted, win_state):
                 current_cell.editable = True
         # Check for game win if all spaces filled
         all_filled = True
-        current_board = []
-        for i in range(len(board)):
+        current_board = []  # Initialize current_board outside the loop
+        for i in range(9):
             current_board.append([])
-            for j in range(len(board[0])):
-                current_board[i].append(cells[i * 9 + j].value)
-                if cells[i * 9 + j].value == 0:
+            for j in range(9):
+                cell_value = cells[i * 9 + j].value
+                current_board[i].append(cell_value)
+                if cell_value == 0:
                     all_filled = False
                     break
 
         if all_filled:
+            print("Current Board:")
+            for row in current_board:
+                print(row)
+
+            print("Win State:")
+            for row in win_state:
+                print(row)
+
             if current_board == win_state:
-                return win_loop()
+                return win_screen_loop()
 
             else:
                 # Game lost return loss_loop()
-                return loss_loop()
+                return loss_screen_loop()
 
         pygame.display.update()
 
 
-def draw_loss():
-    game_over_font = pygame.font.Font(None, 90)
-
-    screen.fill(BG_COLOR)
-
-    text = "Game Won!"
-
-    exit_button = pygame.Rect(WIDTH // 2 - 100, HEIGHT // 2 + 50, 200, 50)
-    pygame.draw.rect(screen, (193, 205, 205), exit_button)
-    exit_button_font = pygame.font.Font(None, 36)
-    exit_button_text = exit_button_font.render("Exit", True, BLACK)
-    exit_button_text_rect = exit_button_text.get_rect(center=exit_button.center)
-    screen.blit(exit_button_text, exit_button_text_rect)
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            mouse_pos = pygame.mouse.get_pos()
-            if exit_button.collidepoint(mouse_pos):
-                pygame.quit()
-                sys.exit()
-        game_over_surf = game_over_font.render(text, 0, BLACK)
-        game_over_rect = game_over_surf.get_rect(
-            center=(WIDTH // 2, HEIGHT // 2 - 100))
-
-        screen.blit(game_over_surf, game_over_rect)
-        pygame.display.update()
-
-def loss_loop():
-    draw_loss()
-
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                mouse = pygame.mouse.get_pos()
-
-                # Restart button clicked
-                if 237 <= mouse[0] <= 365 and 425 <= mouse[1] <= 451:
-                    return main()
-
-        pygame.display.update()
-
-def draw_win():
+def draw_loss_screen():
     game_over_font = pygame.font.Font(None, 90)
     screen.fill(BG_COLOR)
 
@@ -382,8 +356,8 @@ def draw_win():
     screen.blit(game_over_surf, game_over_rect)
     pygame.display.update()
 
-def win_loop():
-    draw_win()
+def loss_screen_loop():
+    draw_loss_screen()
 
     while True:
         for event in pygame.event.get():
@@ -392,33 +366,71 @@ def win_loop():
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse = pygame.mouse.get_pos()
+                x, y = event.pos
+                print(x, y)
 
-                # Exit button clicked
-                if 268 <= mouse[0] <= 334 and 425 <= mouse[1] <= 451:
-                    return
+                # Restart button functionality
+                if 200 <= mouse[0] <= 400 and 400 <= mouse[1] <= 450:
+                    return main()
+
+        pygame.display.update()
+
+def draw_win_screen():
+    game_over_font = pygame.font.Font(None, 90)
+
+    screen.fill(BG_COLOR)
+
+    text = "Game Won!"
+
+    exit_button = pygame.Rect(WIDTH // 2 - 100, HEIGHT // 2 + 50, 200, 50)
+    pygame.draw.rect(screen, (193, 205, 205), exit_button)
+    exit_button_font = pygame.font.Font(None, 36)
+    exit_button_text = exit_button_font.render("Exit", True, BLACK)
+    exit_button_text_rect = exit_button_text.get_rect(center=exit_button.center)
+    screen.blit(exit_button_text, exit_button_text_rect)
+
+    game_over_surf = game_over_font.render(text, 0, BLACK)
+    game_over_rect = game_over_surf.get_rect(
+            center=(WIDTH // 2, HEIGHT // 2 - 100))
+
+    screen.blit(game_over_surf, game_over_rect)
+    pygame.display.update()
+
+def win_screen_loop():
+    draw_win_screen()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse = pygame.mouse.get_pos()
+                x, y = event.pos
+                print(x, y)
+
+                # Exit button functionality
+                if 200 <= mouse[0] <= 400 and 400 <= mouse[1] <= 450:
+                    pygame.quit()
+                    sys.exit()
 
         pygame.display.update()
 
 
-def print_board(board):
-    for i, row in enumerate(board):
-        for element in row:
-            print(element, "", end="")
-        print()
 
 def main():
-    game_mode = startup_loop()
+    start_screen_loop()
 
-    if game_mode == 0:
-        deleted = 30
-    elif game_mode == 1:
-        deleted = 40
+    if start_screen_loop() == 0:
+        empty_cells = 30
+    elif start_screen_loop() == 1:
+        empty_cells = 40
     else:
-        deleted = 50
+        empty_cells = 50
 
-    sudoku = SudokuGenerator(9, deleted)
-    sudoku.fill_values()
-    board = sudoku.get_board()
+    sudoku_gen = SudokuGenerator(9, empty_cells)
+    sudoku_gen.fill_values()
+    board = sudoku_gen.get_board()
 
     win_state = []
     for i, row in enumerate(board):
@@ -426,13 +438,10 @@ def main():
         for element in row:
             win_state[i].append(element)
 
-    sudoku.remove_cells()
-    board = sudoku.get_board()
+    sudoku_gen.remove_cells()
+    board = sudoku_gen.get_board()
 
-    print_board(win_state)
-
-    game_loop(sudoku, board, deleted, win_state)
-
+    game_in_progress(sudoku_gen, board, empty_cells, win_state)
 
 
 if __name__ == "__main__":
