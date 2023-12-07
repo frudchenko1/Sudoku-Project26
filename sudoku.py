@@ -1,6 +1,6 @@
 import pygame, sys
 from sudoku_generator import *
-from constants1 import *
+from constants import *
 
 pygame.init()
 pygame.display.set_caption("Sudoku")
@@ -48,7 +48,7 @@ class Cell:
         # Sketched value
         if self.editable:
             if self.value != 0:
-                color = (48, 48, 48)
+                color = (0,0,0)
             else:
                 color = BG_COLOR
             font = self.pygame.font.SysFont("font", 20)
@@ -62,7 +62,7 @@ class Cell:
         if self.value == 0:
             top_left = (self.row * 68, self.col * 68)
             cell_size = (50, 50)
-            pygame.draw.rect(self.screen, BG_COLOR, (top_left, cell_size))
+            pygame.draw.rect(self.screen, BLACK, (top_left, cell_size))
 
 
 def draw_start_screen():
@@ -142,18 +142,18 @@ def draw_grid(cells):
     # draw horizontal
     for i in range(0, 10):
         if i % 3 == 0:
-            width = 12
+            width = 7
         else:
-            width = LINE_WIDTH
-        pygame.draw.line(screen, LINE_COLOR, (0, i * CELL_SIZE), (WIDTH, i * CELL_SIZE), width)
+            width = 2
+        pygame.draw.line(screen, BLACK, (0, i * 67), (WIDTH, i * 67), width)
 
     # draw vertical
     for j in range(1, 10):
         if j % 3 == 0:
-            width = 12
+            width = 7
         else:
-            width = LINE_WIDTH
-        pygame.draw.line(screen, LINE_COLOR, (j * CELL_SIZE, 0), (j * CELL_SIZE, HEIGHT), width)
+            width = 2
+        pygame.draw.line(screen, BLACK, (j * 67, 0), (j * 67, HEIGHT), width)
 
     pygame.draw.rect(screen, BG_COLOR, (0, HEIGHT - 94, WIDTH, 100), WIDTH)
 
@@ -180,14 +180,16 @@ def game_in_progress(sudoku, board, deleted, win_state):
 
     # Create cells
     for y, row in enumerate(board):
+
         for x, value in enumerate(row):
             if value == 0:
-                current = Cell(value, x, y, LINE_COLOR, pygame, screen, True)  # Make user-input cells editable
+                current = Cell(value, x, y, BLACK, pygame, screen, True)  # Make user-input cells editable
             else:
-                current = Cell(value, x, y, LINE_COLOR, pygame, screen, False)  # Mark generated cells as non-editable
+                current = Cell(value, x, y, BLACK, pygame, screen, False)  # Mark generated cells as non-editable
             cells.append(current)
 
     draw_grid(cells)
+
 
     while True:
         for event in pygame.event.get():
@@ -210,7 +212,7 @@ def game_in_progress(sudoku, board, deleted, win_state):
                         if current_cell.value == 0:
                             # Set all other cells' color to LINE_COLOR
                             for cell in cells:
-                                cell.color = LINE_COLOR
+                                cell.color = BLACK
                                 cell.draw()
                             current_cell.color = RED
                             current_cell.draw()
@@ -268,7 +270,7 @@ def game_in_progress(sudoku, board, deleted, win_state):
                 elif event.key == pygame.K_UP:
                     # Move selection upwards
                     if current_cell:
-                        current_cell.color = LINE_COLOR
+                        current_cell.color = BLACK
                         current_cell.draw()
                         if current_cell.col > 0:
                             current_cell = cells[9 * (current_cell.col - 1) + current_cell.row]
@@ -278,7 +280,7 @@ def game_in_progress(sudoku, board, deleted, win_state):
                 elif event.key == pygame.K_DOWN:
                     # Move selection downwards
                     if current_cell:
-                        current_cell.color = LINE_COLOR
+                        current_cell.color = BLACK
                         current_cell.draw()
                         if current_cell.col < 8:
                             current_cell = cells[9 * (current_cell.col + 1) + current_cell.row]
@@ -288,7 +290,7 @@ def game_in_progress(sudoku, board, deleted, win_state):
                 elif event.key == pygame.K_LEFT:
                     # Move selection to the left
                     if current_cell:
-                        current_cell.color = LINE_COLOR
+                        current_cell.color = BLACK
                         current_cell.draw()
                         if current_cell.row > 0:
                             current_cell = cells[9 * current_cell.col + current_cell.row - 1]
@@ -298,7 +300,7 @@ def game_in_progress(sudoku, board, deleted, win_state):
                 elif event.key == pygame.K_RIGHT:
                     # Move selection to the right
                     if current_cell:
-                        current_cell.color = LINE_COLOR
+                        current_cell.color = BLACK
                         current_cell.draw()
                         if current_cell.row < 8:
                             current_cell = cells[9 * current_cell.col + current_cell.row + 1]
