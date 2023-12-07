@@ -127,7 +127,7 @@ class Board:
                         clicked_cell.input_number(8)
                     elif event.key == pygame.K_9:
                         clicked_cell.input_number(9)
-
+                clicked_cell.draw()
 
 
                 # Update display
