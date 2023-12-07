@@ -89,6 +89,35 @@ class Board:
         pygame.draw.rect(screen, BG_COLOR, (0, 600, WIDTH, 100))
         button_font = pygame.font.Font(None, 25)
         menu_buttons = ["Reset", "Restart", "Exit"]
+        clicked_cell = self.cells[row][col]
+        button_width = 150
+        total_width = 3 * button_width
+        start_position = (WIDTH - total_width - 20) // 2 - 10
+        pygame.draw.rect(screen, BG_COLOR, (0, 600, WIDTH, 100))
+        button_font = pygame.font.Font(None, 25)
+        menu_buttons = ["Reset", "Restart", "Exit"]
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pass
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = event.pos
+
+                # Check if any menu button is clicked
+                for i, button_text in enumerate(menu_buttons):
+                    button_position = start_position + i * (button_width + 20)
+                    button_rect = pygame.Rect(button_position, HEIGHT - 80, button_width, 50)
+
+
+            # Draw menu buttons
+            for i, button_text in enumerate(menu_buttons):
+                button_position = start_position + i * (button_width + 20)
+                button_rect = pygame.Rect(button_position, HEIGHT - 80, button_width, 50)
+                pygame.draw.rect(screen, (193, 205, 205), button_rect)
+
+                text = button_font.render(button_text, True, BLACK)
+                text_rect = text.get_rect(center=button_rect.center)
+                screen.blit(text, text_rect)
 
         while True:
             for event in pygame.event.get():
@@ -104,6 +133,13 @@ class Board:
                     self.selected_cell = self.cells[row][col]
                     self.selected_cell.highlight()
                     self.draw()
+                    if button_rect.collidepoint(x, y):
+                        if button_text == "Restart":
+                            draw_game_start(screen)
+                        elif button_text == "Exit":
+                            pygame.quit()
+                            sys.exit()
+
                 elif event.type == pygame.KEYDOWN:
                     x, y = pygame.mouse.get_pos()
                     row = y // (600 // (BOARD_COLS * BOARD_ROWS))
@@ -130,45 +166,9 @@ class Board:
                 clicked_cell.draw()
 
 
+
                 # Update display
                 pygame.display.update()
-    def buttons(self):
-        clicked_cell = self.cells[row][col]
-        button_width = 150
-        total_width = 3 * button_width
-        start_position = (WIDTH - total_width - 20) // 2 - 10
-        pygame.draw.rect(screen, BG_COLOR, (0, 600, WIDTH, 100))
-        button_font = pygame.font.Font(None, 25)
-        menu_buttons = ["Reset", "Restart", "Exit"]
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pass
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                x, y = event.pos
-
-                # Check if any menu button is clicked
-                for i, button_text in enumerate(menu_buttons):
-                    button_position = start_position + i * (button_width + 20)
-                    button_rect = pygame.Rect(button_position, HEIGHT - 80, button_width, 50)
-
-                    if button_rect.collidepoint(x, y):
-                        if button_text == "Restart":
-                            draw_game_start(screen)
-                        elif button_text == "Exit":
-                            pygame.quit()
-                            sys.exit()
-
-            # Draw menu buttons
-            for i, button_text in enumerate(menu_buttons):
-                button_position = start_position + i * (button_width + 20)
-                button_rect = pygame.Rect(button_position, HEIGHT - 80, button_width, 50)
-                pygame.draw.rect(screen, (193, 205, 205), button_rect)
-
-                text = button_font.render(button_text, True, BLACK)
-                text_rect = text.get_rect(center=button_rect.center)
-                screen.blit(text, text_rect)
-        pygame.display.update()
 
     def select(self, row, col):
         return self.cells[row][col]
